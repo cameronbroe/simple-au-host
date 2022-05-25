@@ -8,18 +8,20 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "My App",
+    name: "SimpleAUHost",
     platforms: [
         .iOS("15.2")
     ],
     products: [
         .iOSApplication(
-            name: "My App",
+            name: "SimpleAUHost",
             targets: ["AppModule"],
+            bundleIdentifier: "com.cameronbroe.simple-au-host",
+            teamIdentifier: "794G2HFN44",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .running),
-            accentColor: .presetColor(.red),
+            appIcon: .placeholder(icon: .note),
+            accentColor: .presetColor(.blue),
             supportedDeviceFamilies: [
                 .pad,
                 .phone
