@@ -1,4 +1,9 @@
 import AudioUnit
+import AVFoundation
+
+struct AudioUnitData {
+    let name: String
+}
 
 class AudioUnitRepository {
     public let availableTypes = [
@@ -53,4 +58,16 @@ class AudioUnitRepository {
         kAudioUnitSubType_VoiceProcessingIO,
         kAudioUnitSubType_ScheduledSoundPlayer,
     ]
+    
+    public func findAudioUnits(byType: OSType = 0, bySubType: OSType = 0) -> [AVAudioUnitComponent] {
+        let manager = AVAudioUnitComponentManager.shared()
+        let description = AudioComponentDescription(
+            componentType: byType, 
+            componentSubType: bySubType, 
+            componentManufacturer: 0, 
+            componentFlags: 0, 
+            componentFlagsMask: 0)
+        
+        return manager.components(matching: description)
+    }
 }
