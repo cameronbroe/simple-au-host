@@ -23,7 +23,7 @@ struct AudioUnitListNode: Identifiable, CustomStringConvertible {
     }
 }
 
-func buildAudioUnitListNodeTree(audioUnits: [AVAudioUnitComponent]) -> AudioUnitListNode {
+func buildAudioUnitListNodeTree() async throws -> [AudioUnitListNode] {
     var typeNodes: [AudioUnitListNode] = []
 
     for (type, typeName) in AudioUnitRepository.availableTypes {
@@ -39,12 +39,26 @@ func buildAudioUnitListNodeTree(audioUnits: [AVAudioUnitComponent]) -> AudioUnit
             }
         }
         
+        let allComponentsOfType = AudioUnitRepository.findAudioUnits(byType: type)
+        for component in allComponentsOfType {
+            let alreadyAdded = subTypeNodes.contains { node in 
+                if let children = node.children {
+                    return children.contains { $0.name == component.name }
+                } else {
+                    return false
+                }
+            }
+            if !alreadyAdded {
+                print("Adding an AU with no sub type: \(component.name)")
+                subTypeNodes.append(AudioUnitListNode(name: component.name, component: component))
+            }
+        }
+        
         if subTypeNodes.count > 0 {
             let typeNode = AudioUnitListNode(name: typeName, children: subTypeNodes)
             typeNodes.append(typeNode)
         }
     }
     
-    let root = AudioUnitListNode(name: "AudioUnits", children: typeNodes)
-    return root
+    return typeNodes
 }
