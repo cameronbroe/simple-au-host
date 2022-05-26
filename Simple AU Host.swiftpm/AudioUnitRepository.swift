@@ -64,6 +64,6 @@ class AudioUnitRepository {
             componentFlags: 0, 
             componentFlagsMask: 0)
         
-        return manager.components(matching: description)
+        return manager.components(matching: description).filter { $0.isSandboxSafe }
     }
 }
