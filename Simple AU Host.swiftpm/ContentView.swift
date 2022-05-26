@@ -4,13 +4,20 @@ struct ContentView: View {
     @State var audioUnitList: [AudioUnitListNode] = []
     
     var body: some View {
-        VStack {
+        NavigationView {
             if let audioUnitList = audioUnitList {
                 List(audioUnitList, children: \.children) { au in
-                    Text(au.description)
+                    if let component = au.audioComponent {
+                        AudioUnitRow(audioUnit: component)
+                    } else {
+                        Text(au.name)
+                    }
                 }
+                .navigationTitle("AudioUnit List")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
+        .navigationViewStyle(.stack)
         .task {
             audioUnitList = try! await buildAudioUnitListNodeTree()
         }
