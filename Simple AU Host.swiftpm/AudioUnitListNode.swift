@@ -49,7 +49,6 @@ func buildAudioUnitListNodeTree() async throws -> [AudioUnitListNode] {
                 }
             }
             if !alreadyAdded {
-                print("Adding an AU with no sub type: \(component.name)")
                 subTypeNodes.append(AudioUnitListNode(name: component.name, component: component))
             }
         }
