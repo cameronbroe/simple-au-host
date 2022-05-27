@@ -15,18 +15,21 @@ struct AudioUnitView: View {
     
     var body: some View {
         if let vc = auViewController {
-            return AudioUnitViewControllerWrapper(controller: vc)
+//            print(vc.view.autoresizesSubviews)
+//            return AudioUnitViewControllerWrapper(controller: vc)
+            return ComponentViewControllerWrapper(auViewController: vc)
         } else {
             return Text("AudioUnit view controller not ready yet")
                 .alert(errorMessage, isPresented: $didError) {}
                 .task {
                     do {
-                        let avAudioUnit = try await AVAudioUnit.instantiate(with: audioUnit.audioComponentDescription)
+                        let avAudioUnit = try await AVAudioUnit.instantiate(with: audioUnit.audioComponentDescription, options: .loadOutOfProcess)
                         
                         let audioUnit = avAudioUnit.auAudioUnit
-                        let viewController = await audioUnit.requestViewController()
-                        DispatchQueue.main.async {
-                            auViewController = viewController
+                        audioUnit.requestViewController { vc in
+                            DispatchQueue.main.async {
+                                auViewController = vc
+                            }
                         }
                     } catch {
                         DispatchQueue.main.async {
