@@ -8,7 +8,11 @@ struct ContentView: View {
             if let audioUnitList = audioUnitList {
                 List(audioUnitList, children: \.children) { au in
                     if let component = au.audioComponent {
-                        AudioUnitRow(audioUnit: component)
+                        NavigationLink {
+                            AudioUnitView(audioUnit: component)
+                        } label: {
+                            AudioUnitRow(audioUnit: component)
+                        }
                     } else {
                         Text(au.name)
                     }
