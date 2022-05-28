@@ -17,6 +17,8 @@ struct AudioUnitRow: View {
                 Text(audioUnit.manufacturerName)
                     .font(.system(size: 10, weight: .light))
             }
+            Spacer()
+            Text("Version: \(audioUnit.versionString)")
         }
         .frame(height: 30)
     }
