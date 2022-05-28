@@ -31,8 +31,6 @@ struct AudioUnitList: View {
     var midiProcessors: [IdentifiableAudioUnitComponent]
     @State private var midiProcessorsExpanded = false
     
-    @State var selectedAudioUnit: UUID?
-    
     init(instruments: [AVAudioUnitComponent], effects: [AVAudioUnitComponent], midiProcessors: [AVAudioUnitComponent]) {
         self.instruments = instruments.map { IdentifiableAudioUnitComponent($0) }
         self.effects = effects.map { IdentifiableAudioUnitComponent($0) }
@@ -40,7 +38,7 @@ struct AudioUnitList: View {
     }
     
     var body: some View {
-        List(selection: $selectedAudioUnit) {
+        List {
             DisclosureGroup("Instruments", isExpanded: $instrumentsExpanded) {
                 ForEach(instruments) { au in
                     AudioUnitListNode(audioUnitComponent: au.component)

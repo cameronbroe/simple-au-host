@@ -13,8 +13,9 @@ struct ContentView: View {
                 instruments: instruments, 
                 effects: effects, 
                 midiProcessors: midiProcessors)
+            
+            Text("Please select an AUv3 Plug-In to load")
         }
-        .navigationViewStyle(.stack)
         .task {
             instruments = AudioUnitRepository.findInstrumentAudioUnits()
             effects = AudioUnitRepository.findEffectAudioUnits()
