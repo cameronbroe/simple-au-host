@@ -23,8 +23,14 @@ struct IdentifiableAudioUnitComponent: Identifiable {
 
 struct AudioUnitList: View {
     var instruments: [IdentifiableAudioUnitComponent]
+    @State private var instrumentsExpanded = false
+    
     var effects: [IdentifiableAudioUnitComponent]
+    @State private var effectsExpanded = false
+    
     var midiProcessors: [IdentifiableAudioUnitComponent]
+    @State private var midiProcessorsExpanded = false
+    
     @State var selectedAudioUnit: UUID?
     
     init(instruments: [AVAudioUnitComponent], effects: [AVAudioUnitComponent], midiProcessors: [AVAudioUnitComponent]) {
@@ -35,19 +41,19 @@ struct AudioUnitList: View {
     
     var body: some View {
         List(selection: $selectedAudioUnit) {
-            Section(header: Text("Instruments")) {
+            DisclosureGroup("Instruments", isExpanded: $instrumentsExpanded) {
                 ForEach(instruments) { au in
                     AudioUnitListNode(audioUnitComponent: au.component)
                 }
             }
             
-            Section(header: Text("Effects")) {
+            DisclosureGroup("Effects", isExpanded: $effectsExpanded) {
                 ForEach(effects) { au in
                     AudioUnitListNode(audioUnitComponent: au.component)
                 }
             }
             
-            Section(header: Text("MIDI Processors")) {
+            DisclosureGroup("MIDI Processors", isExpanded: $midiProcessorsExpanded) {
                 ForEach(midiProcessors) { au in
                     AudioUnitListNode(audioUnitComponent: au.component)
                 }
