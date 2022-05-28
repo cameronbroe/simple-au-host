@@ -59,11 +59,23 @@ class AudioUnitRepository {
         let manager = AVAudioUnitComponentManager.shared()
         let description = AudioComponentDescription(
             componentType: byType, 
-            componentSubType: bySubType, 
+            componentSubType: 0, 
             componentManufacturer: 0, 
             componentFlags: 0, 
             componentFlagsMask: 0)
         
         return manager.components(matching: description).filter { $0.isSandboxSafe }
+    }
+    
+    public static func findInstrumentAudioUnits() -> [AVAudioUnitComponent] {
+        return findAudioUnits(byType: kAudioUnitType_MusicDevice)
+    }
+    
+    public static func findEffectAudioUnits() -> [AVAudioUnitComponent] {
+        return findAudioUnits(byType: kAudioUnitType_Effect) + findAudioUnits(byType: kAudioUnitType_MusicEffect)
+    }
+    
+    public static func findMIDIAudioUnits() -> [AVAudioUnitComponent] {
+        return findAudioUnits(byType: kAudioUnitType_MIDIProcessor)
     }
 }

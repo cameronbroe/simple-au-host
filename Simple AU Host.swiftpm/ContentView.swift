@@ -1,29 +1,24 @@
 import SwiftUI
+import AVFoundation
 
 struct ContentView: View {
     @State var audioUnitList: [AudioUnitListNode] = []
+    @State var instruments: [AVAudioUnitComponent] = []
+    @State var effects: [AVAudioUnitComponent] = []
+    @State var midiProcessors: [AVAudioUnitComponent] = []
     
     var body: some View {
         NavigationView {
-            if let audioUnitList = audioUnitList {
-                List(audioUnitList, children: \.children) { au in
-                    if let component = au.audioComponent {
-                        NavigationLink {
-                            AudioUnitView(audioUnit: component)
-                        } label: {
-                            AudioUnitRow(audioUnit: component)
-                        }
-                    } else {
-                        Text(au.name)
-                    }
-                }
-                .navigationTitle("AudioUnit List")
-                .navigationBarTitleDisplayMode(.inline)
-            }
+            AudioUnitList(
+                instruments: instruments, 
+                effects: effects, 
+                midiProcessors: midiProcessors)
         }
         .navigationViewStyle(.stack)
         .task {
-            audioUnitList = try! await buildAudioUnitListNodeTree()
+            instruments = AudioUnitRepository.findInstrumentAudioUnits()
+            effects = AudioUnitRepository.findEffectAudioUnits()
+            midiProcessors = AudioUnitRepository.findMIDIAudioUnits()
         }
     }
 }
