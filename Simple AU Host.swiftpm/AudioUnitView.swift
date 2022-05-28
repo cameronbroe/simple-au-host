@@ -25,6 +25,7 @@ struct AudioUnitView: View {
                         let audioUnit = avAudioUnit?.auAudioUnit
                         let viewController = await audioUnit?.requestViewController()
                         DispatchQueue.main.async {
+                            AudioUnitSession.shared.connectAudioUnit(avAudioUnit!)
                             auViewController = viewController
                         }
                     } catch {
