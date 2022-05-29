@@ -1,10 +1,6 @@
 import AVFoundation
 
 class AudioUnitSession {
-    private static let format = AVAudioFormat(
-        standardFormatWithSampleRate: 48000, 
-        channels: 2)
-    
     public static let shared = AudioUnitSession()
     private var audioUnit: AUAudioUnit?
     private var effect: AVAudioUnit?
@@ -12,7 +8,18 @@ class AudioUnitSession {
     private let engine = AVAudioEngine()
     
     private init() {
-        try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+        setupNotifications()
+        try! AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord)
+    }
+    
+    func setupNotifications() {
+        let name = Notification.Name(String(kAudioComponentInstanceInvalidationNotification))
+        NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { [weak self] notification in
+            if let crashedAU = notification.object as? AUAudioUnit {
+                print(crashedAU.debugDescription)
+                print(notification.debugDescription)
+            }
+        }
     }
     
     public func connectAudioUnit(_ audioUnit: AVAudioUnit) {
@@ -23,7 +30,9 @@ class AudioUnitSession {
         
         self.engine.attach(self.effect!)
         
-        self.engine.connect(self.effect!, to: self.engine.mainMixerNode, format: AudioUnitSession.format)
+        self.engine.connect(self.effect!, 
+                            to: self.engine.mainMixerNode, 
+                            format: self.audioUnit!.outputBusses[0].format)
         
         do {
             try AVAudioSession.sharedInstance().setActive(true)
@@ -32,6 +41,7 @@ class AudioUnitSession {
             print("could not set session active")
         }
         do {
+            self.engine.prepare()
             try self.engine.start()
             print("started engine")
         } catch {
