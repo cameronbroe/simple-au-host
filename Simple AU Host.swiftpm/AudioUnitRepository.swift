@@ -11,7 +11,9 @@ class AudioUnitRepository {
             componentFlags: 0, 
             componentFlagsMask: 0)
         
-        return manager.components(matching: description).filter { $0.isSandboxSafe }
+        let allComponents = manager.components(matching: description)
+        
+        return allComponents.filter { $0.isSandboxSafe }
     }
     
     public static func findInstrumentAudioUnits() -> [AVAudioUnitComponent] {
