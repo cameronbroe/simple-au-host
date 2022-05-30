@@ -25,7 +25,7 @@ struct AudioUnitView: View {
                                     showKeyboard.toggle()
                                 }
                             } label: {
-                                Image(systemName: "gear")
+                                Image("KeyboardIcon")
                             }
                         }
                     }
